@@ -1,2 +1,2 @@
 # Thesis-code
-This repository contain
+This repository contains python code from my thesis
