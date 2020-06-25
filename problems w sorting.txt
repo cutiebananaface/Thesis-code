@@ -1,0 +1,12 @@
+problem may be with the keywords that being used to sort
+-word is netpval
+-check netpval 
+    -netpval in 5 is different by an order of magnitude
+    -6, 7, 8 , 9, 10-13
+    
+    before sorting:
+        -11, 57, 71, 72, 86, 109
+-check the first and last element of the sorted and unsorted 
+- i am not sure if sort with a keyword is doing what i think?
+or even what this code is doing
+-use recursion to run check keys for the second dict on the first

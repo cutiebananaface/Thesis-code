@@ -7,6 +7,8 @@ Created on Mon Feb 10 23:15:30 2020
 #status: rewritten(complete)
 # Generated with SMOP  0.41
 #from libsmop import *
+# import unittest
+
 import numpy as np
 #from np.size_py import np.size, findnonzeros
 from sortcellarraybyfield_python import sortcellarraybyfield
@@ -20,12 +22,19 @@ from updateseriessquare_python_temp import updateseriessquare
 from loadmatlab_workspace import load_mat
 from copy import *
     
-before= load_mat('input-extendseriessquarealltheway-nopinone')
-fs= before['fs']
-hs= before['hs']
-squarelist= before['squarelist']
+# before= load_mat('input-extendseriessquarealltheway-nopinone')
+# fs= before['fs']
+# hs= before['hs']
+# squarelist= before['squarelist']
 ###look at this arianna, it ran without error but u still need to look over the output
+# middle=load_mat('inthemiddle-extendseriesalltheway-squarelist')
+# squarelist_m=middle['squarelist']
+# newlist_m=middle['newlist']
 
+#testing loadinng individual variables
+fs= load_mat('input-essaw-fs')['fs']
+hs=load_mat('input-essaw-hs')['hs']
+squarelist= load_mat('input-essaw-squarelist')['squarelist']
 def extendseriessquarealltheway(squarelist,fs,hs):
 
 
@@ -56,11 +65,13 @@ def extendseriessquarealltheway(squarelist,fs,hs):
         for i in np.arange(0, np.size(squarelist)):
             s=copy(squarelist[i])
 # extendseriessquarealltheway.m:23
-            newguys=extendseriessquare(s,fs,hs,1)
+            newguys=extendseriessquare(s,fs,hs,1) #local function
 # extendseriessquarealltheway.m:24
             newlist= np.concatenate((copy(newlist),newguys))
 # extendseriessquarealltheway.m:25
         squarelist= sortcellarraybyfield(newlist,'netpval')
+        #line for testing
+        # return squarelist
 # extendseriessquarealltheway.m:27
         updowns= extractfieldsfromcellarray(squarelist,np.array(['upterminated','downterminated','degree','netpval']))
 # extendseriessquarealltheway.m:29
@@ -314,6 +325,9 @@ def closest(f,allfs):
 # extendseriessquarealltheway.m:223
     return minval, ival
 
+# class Mytest(unittest.TestCase):
+#     def test(self):
+#         self.assertDictEqual(self.squarelist, self.squarelist_m)
 
 newsquarelist, boggeddown, census = extendseriessquarealltheway(squarelist,fs,hs)
 print('oh my god almost there')

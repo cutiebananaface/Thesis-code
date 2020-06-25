@@ -20,17 +20,17 @@ from loadmatlab_workspace import load_mat
 
 # updateseriessquare.m
 
-before=load_mat('before-updateseriessquare-nopinone')
-s_i=before['s']
+# before=load_mat('before-updateseriessquare-nopinone')
+# s_i=before['s']
 
 def updateseriessquare(s, slowmode=1): #fgrid is made here!
-
+    print("top of function", s['column1']['pval'], s['column2']['pval'], s['column3']['pval'], s['column4']['pval'])
     s['column1'] = updateseries(s['column1'])
     s['column2'] = updateseries(s['column2'])
     s['column3'] = updateseries(s['column3'])
     s['column4'] = updateseries(s['column4'])
     s['numjs'] = np.size(s['column1']['fs'], axis=None)
-    
+    print("after updateseries", s['column1']['pval'], s['column2']['pval'], s['column3']['pval'], s['column4']['pval'])
     s['fgrid'] = np.zeros((s['numjs'],4))
 
     # if s['dtype == 1
@@ -96,11 +96,12 @@ def updateseriessquare(s, slowmode=1): #fgrid is made here!
 #                s['roworder'][0][thiso_c]= deepcopy(i)
 #                print(f"4loop. this is i,{i}, and j,{j}, and this is thiso, {thiso}, this is thiso_c, {thiso_c}\n")
 #                print(f"4loop.this is columnorder, {s['columnorder']} and this is roworder {s['roworder']}\n")
-    s.update({'listpredicts': []})
+    # s.update({'listpredicts': []})
     for i in np.arange(0,4):
         r=s['roworder'][i]
         c=s['columnorder'][i]
-        s['listpredicts'].append(s['fgrid'][r][c] - s['flatsquare']['flaterrors'][i])
+        # s['listpredicts'].append(s['fgrid'][r][c] - s['flatsquare']['flaterrors'][i]) #should not be list, but rather a np array
+        s['listpredicts'][i]= s['fgrid'][r][c] - s['flatsquare']['flaterrors'][i]
         s['allpredicts'][r,c]=s['listpredicts'][i]
     
     s['allerrors'] = s['fgrid'] - s['allpredicts']
@@ -468,7 +469,10 @@ def updateseriessquare(s, slowmode=1): #fgrid is made here!
 # updateseriessquare.m:368
     
     if s['closedout'] == 0:
-        s['corners'][int(s['numlines'])-1]=bestcorner
+        try:
+            s['corners'][int(s['numlines'])]=bestcorner
+        except:
+            s['corners']= np.append(s['corners'], bestcorner)
 # updateseriessquare.m:374
         s['nextcolumn'] = reccoords['c1']
 # updateseriessquare.m:376
@@ -523,7 +527,7 @@ def updateseriessquare(s, slowmode=1): #fgrid is made here!
 # updateseriessquare.m:410
         s['pvalprefactor'] = s['pvalprefactor']*(linecount*1.5)
 # updateseriessquare.m:411
-    
+    print('before',s['linecount'], s['netpval'],  s['pvalprefactor'], s['seriespval'], s['quadpval'], s['columnp'], '\n')
     s['linecount'] = countfrommcounttool(s['counttool'],min(s['allhs']))
 # updateseriessquare.m:413
     s['oldpvalprefactor'] = s['linecount'] ** np.size(s['allfs'])
@@ -533,6 +537,7 @@ def updateseriessquare(s, slowmode=1): #fgrid is made here!
     s['quadpval'] = s['onequadpval'] ** s['numconstraints']
 # updateseriessquare.m:418
     s['netpval'] = s['pvalprefactor'] * s['seriespval'] * s['quadpval'] * s['columnp']
+    print('after',s['linecount'], s['netpval'],  s['pvalprefactor'], s['seriespval'], s['quadpval'], s['columnp'])
 # updateseriessquare.m:420
     if np.isnan(s['netpval']):
         1
@@ -842,16 +847,16 @@ def flipseriessquare(s):
 
 def flipmatrix(g):
 
-    g2=np.dot(g,0)
+    g2= g * 0
 # updateseriessquare.m:655
-    g2[:,0]=g[:,3]
+    g2[:,0]= deepcopy(g[:,3])
 # updateseriessquare.m:656
-    g2[:,1]=g[:,2]
+    g2[:,1]= deepcopy(g[:,2])
 # updateseriessquare.m:657
-    g2[:,2]=g[:,1]
+    g2[:,2]= deepcopy(g[:,1])
 # updateseriessquare.m:658
-    g2[:,3]=g[:,0]
+    g2[:,3]= deepcopy(g[:,0])
     return g2
 
-output=updateseriessquare(s_i)
-print("done!!! :))) ")
+# output=updateseriessquare(s_i)
+# print("done!!! :))) ")

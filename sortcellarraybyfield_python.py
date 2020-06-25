@@ -5,7 +5,7 @@ import numpy as np
 
  
 def sortcellarraybyfield(database,fieldname,upordown="ascend"):
-
+    #check direction
     if upordown == "ascend":
         upordown= 1 #'ascend'
 # sortcellarraybyfield.m:3
@@ -18,6 +18,7 @@ def sortcellarraybyfield(database,fieldname,upordown="ascend"):
     output=[]
 # sortcellarraybyfield.m:8
     fields=np.zeros((1, np.size(database, axis=None)))
+    # fields= [0] * np.size(database,axis=None)
 # sortcellarraybyfield.m:9
     for i in range(0, np.size(database,axis=None)):
         fields[0][i]= database[i][fieldname]
@@ -28,7 +29,7 @@ def sortcellarraybyfield(database,fieldname,upordown="ascend"):
 # sortcellarraybyfield.m:14
     output= []
     for i in range(0,np.size(database, axis=None)):
-        output.append(database[Xi[0][i]])
+        output.append(database[Xi][0][i])
         # try:
         #     output.insert(i,database[XI][0][i])
         # # except:

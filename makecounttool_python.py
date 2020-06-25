@@ -3,7 +3,9 @@ from loadmatlab_workspace import load_mat
 # before= load_mat('makecounttool-workspace-before')
 # after= load_mat('makecounttool-workspace-end')
 # hs=before['hs']
+# # squarelist= load_mat('input-essaw-squarelist')['squarelist']
 # hs1=after['hs']
+
 def makecounttool(hs):
     '''
     Tool for counting the elements in counttool
@@ -25,3 +27,7 @@ def makecounttool(hs):
     
     counttool1['countvalues']=np.asarray(countvalues_list) #after the for loop is done, turn the countvalues_list into an array and append to counttool1
     return counttool1
+
+
+# counttool=makecounttool(hs)
+# # print("out")

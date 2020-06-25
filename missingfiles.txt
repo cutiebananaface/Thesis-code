@@ -1,0 +1,6 @@
+files that are missing:
+test2 
+f1table
+f0table
+findallpairs
+q
