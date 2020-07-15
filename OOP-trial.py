@@ -1,5 +1,6 @@
 from settingsfromtightness_python import settingsfromtightness
 from kitfromcsvfile_python import kitfromcsvfile
+from redrigspectralcorrection_mini import redrigspectralcorrection
 # from peakpicking import cubic_spline, peakpicker
 import numpy as np
 import copy 
@@ -187,8 +188,89 @@ class Kit(Molecule): #Child class- gets the attributes from molecule
         peakresults['threshsigma'] = threshsigma 
         peakresults['flatspec'] = flatspec 
         peakresults['newf'] = newf
-        return peakresults
+        return peakresults #matches the end of findpeaksd
+    
+    def after_findpeaksd():
+        fs = peakresults['exactfs']
+        hs = peakresults['exacths']
+        fs, XI = np.sort(fs), np.argsort(fs)
+        hs = hs[XI]
 
+        # if correctheights:
+        fs, hs = redrigspectralcorrection(fs,hs)
+
+        # % lastslash = find(csvfilename == '/',1,'last') + 1;
+        # % lastdot = find(csvfilename == '.',1,'last') - 1;
+        # % molname = filenames(lastslash:lastdot);
+        # % lastslash = find(filenames == '/',1,'last') + 1;
+        # # % lastdot = find(filenames == '.',1,'last') - 1;
+        # kit['kitfilename'] =  kitfilename(csvfilename); ## havent converted
+        # # function s = kitfilename(csvfilename)
+        # # s = [csvfilename(1:end-4) 'kit'];
+        # kit['figfilename'] = figfilename(csvfilename);
+        # # function s = figfilename(csvfilename)
+        # # s = [csvfilename(1:end-4) 'fig.fig'];
+        # kit['pdffilename'] = pdffilename(csvfilename);
+        # # function s = pdffilename(csvfilename)
+        # # s = [csvfilename(1:end-4) 'pdf.pdf'];
+        # kit['reportfilename'] = reportfilename(csvfilename);
+        # # function s = reportfilename(csvfilename)
+        # # s = [csvfilename(1:end-4) '_report.txt'];
+        # [kit['molname'], directoryname] = molnamefromfilename(csvfilename);
+        # # function [molname,directoryname] = molnamefromfilename(filename)
+        # # lastslash = find(filename == '/',1,'last') + 1;
+        # # lastdot = find(filename == '.',1,'last') - 1;
+        # # molname = filename(lastslash:lastdot);
+        # directoryname = filename(1:lastslash-1);
+    
+        ##havent converted anything after = , Jan 21 2020
+        # kit['directoryname'] = directoryname;
+        kit={}
+        kit['freqs1d'] = xdata;
+        # kit['amps1d'] = amps;
+        kit['searchedf1s'] =[];
+        kit['candidateScaffolds'] = {};
+    
+        kit['latestpattern'] = 0;
+        kit['numvotes'] = 0;
+        kit['skipspfit'] = 0;
+        kit['onedpeakfs'] = fs;
+        kit['onedpeakhs'] = hs;
+        kit['onedpeakfsunassigned'] = fs;
+        kit['onedpeakhsunassigned'] = hs;
+        kit['minf'] = min(kit['onedpeakfs']);
+        kit['maxf'] = max(kit['onedpeakfs']);
+        kit['frange'] = kit['maxf'] - kit['minf'];
+        kit['numpeaks'] = np.size(kit['onedpeakfs']);
+        
+        kit['SNR'] = 0.5 * max(hs)/peakresults['stddev'];
+        # kit['barekitdescriptor'] = sprintf('Spectrum %3.1f->%3.1f MHz\n %d peaks, SNR'] = %3.1f',min(fs),max(fs),kit['numpeaks'],kit['SNR'];
+        kit['barekitedescriptor']= f"Spectrum %3.1f->%3.1f MHz\n %d peaks, SNR'] = %3.1f',min(fs),max(fs),kit['numpeaks'],kit['SNR']"
+        kit['numspecies'] = 0;
+        kit['numtries'] = 0;
+        
+        kit['fitlist'] = {};
+        kit['Dinverted'] = 1;
+        kit['bogged'] = 0;
+        kit['experimental'] = 1;
+        kit['fitlistreport'] = '';
+        
+        kit['totalflatsquares'] = 0;
+        # kit['totalCensus'] = zeros(1,20);
+        kit['bestScaffoldp'] = 1;
+        # kit['csvfilename'] = csvfilename;
+        kit['whichspecies'] = np.zeros(1,np.size(kit['onedpeakfs']));
+        kit['templateabsolute'] = np.zeros((1,50));
+        kit['templatenorm'] = np.zeros((1,50));
+        kit['forcecorners'] = 0;
+        kit['cornermap'] = 0;
+        # %kit['tightmode = tightmode;
+        kit['breakmode'] = 1;
+        # %kit['maxka'] = 4;
+        kit['flexibletightness'] = 1;
+        kit['flextights'] = 0;
+        # %kit['skipfit = 0;
+        kit['foundfit'] = 0;
 
 
 trialKit = Kit("nopinone", 1, "Nopinone.csv", 'scaffold', 0)

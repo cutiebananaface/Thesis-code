@@ -14,7 +14,7 @@ from scipy import interpolate
 from predictnext_python import predictnext
 from countfrommcounttool_python import countfrommcounttool
 from loadmatlab_workspace import load_mat
-from updateseriessquare_python_temp import updateseriessquare
+from updateseriessquare_python_July9 import updateseriessquare
 
 # before=load_mat('before_seriessquarefromflatsquare-nopinone')
 # flatsquare=before['flatsquare']

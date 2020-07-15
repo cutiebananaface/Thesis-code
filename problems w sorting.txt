@@ -10,3 +10,15 @@ problem may be with the keywords that being used to sort
 - i am not sure if sort with a keyword is doing what i think?
 or even what this code is doing
 -use recursion to run check keys for the second dict on the first
+
+---
+poly- updateseries>updatepredictions
+nextf- updateseries>updatepredictions
+prevf- updateseries>updatepredictions
+realfs
+realhs
+
+-example struct for incorrect #54 after sorting in python
+106
+1.5797698134921088e-06
+

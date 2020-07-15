@@ -30,11 +30,12 @@ def countfrommcounttool(counttool,h):
     if h < min(counttool['hvalues']):
         h=min(counttool['hvalues'])
 # countfrommcounttool.m:13
-    
+    #adding 1 to count to account for MATLAB vs Python indexing
+    #We want there to be 1 peak at hieght rather than zero (this was due to Python's zero indexing)
     count= interpolate.interp1d(counttool['hvalues'],counttool['countvalues'])
     # print(count)
     # print('h',h)
     # print(count(h))
-    count=count(h)
+    count = count(h)+1
     return count
 # countfrommcounttool.m:15
