@@ -65,14 +65,14 @@ def extendseriessquarealltheway(squarelist,fs,hs):
 # extendseriessquarealltheway.m:19
         # thissquare = squarelist{i};
         for i in np.arange(0, np.size(squarelist)):
-            # print(f"this is the index: {i} ~~~~~~~ \n")
+            print(f"this is the index: {i} ~~~~~~~ \n")
             s = deepcopy(squarelist[i])
 # extendseriessquarealltheway.m:23
             newguys=extendseriessquare(s,fs,hs,1) #local function
 # extendseriessquarealltheway.m:24
-            newlist= np.concatenate((deepcopy(newlist),newguys))
+            newlist= np.concatenate((deepcopy(newlist),deepcopy(newguys)))
 # extendseriessquarealltheway.m:25
-        squarelist=newlist
+#         squarelist=newlist
         squarelist= sortcellarraybyfield(newlist,'netpval') 
         #line for testing
         # return squarelist
@@ -83,7 +83,7 @@ def extendseriessquarealltheway(squarelist,fs,hs):
 # extendseriessquarealltheway.m:31
         qualities= np.sort(updowns['netpval'])
 # extendseriessquarealltheway.m:32
-        numquality= np.size(np.where(qualities< ts['minpval']))
+#         numquality= np.size(np.where(qualities< ts['minpval']))
         numquality= np.size(np.where(qualities< ts['minpval']))
 # extendseriessquarealltheway.m:33
         print('after %d rounds, %d total,%d candidates with p < %.1e\\n' % (numrounds,np.size(squarelist),numquality,ts['minpval']))
@@ -109,7 +109,7 @@ def extendseriessquarealltheway(squarelist,fs,hs):
         census[i]= np.size(np.where(degrees ==1))
 # extendseriessquarealltheway.m:53
     
-    newsquarelist=copy(squarelist)
+    newsquarelist= deepcopy(squarelist)
     return newsquarelist, boggeddown, census
 # extendseriessquarealltheway.m:55
     
@@ -151,11 +151,11 @@ def extendseriessquare(s, allfs, allhs, upordown):
 #fprintf('old guess #3.1f new guess #3.1f\n',bpluscold,bplusc);
     newsquares=[]
 # extendseriessquarealltheway.m:86
-    rup=min(np.size(s['column1']['fs']),r1 + 1)
+    rup=min(np.size(s['column1']['fs'])-1,r1 + 1)
 # extendseriessquarealltheway.m:88
-    rdown=max(1,r1 - 1)
+    rdown=max(0,r1 - 1)
 # extendseriessquarealltheway.m:89
-    otherfs=np.concatenate((s['fgrid'][r1-1,:],s['fgrid'][rup-1,:],s['fgrid'][rdown-1,:])) #brings index down
+    otherfs=np.concatenate((s['fgrid'][r1,:],s['fgrid'][rup,:],s['fgrid'][rdown,:])) #brings index down
 # extendseriessquarealltheway.m:90
     otherfs=otherfs[otherfs != 0]
 # extendseriessquarealltheway.m:91
@@ -245,52 +245,57 @@ def extendseriessquare(s, allfs, allhs, upordown):
 # extendseriessquarealltheway.m:166
             ferror=abs(f2 - fneeded)
 # extendseriessquarealltheway.m:168
-            if (ferror < s['tightnesssettings']['seriessquarefthresh']) and (h2 > s['bheight'] / s['tightnesssettings']['seriesbratio']) and (min(np.diff(np.sort(np.concatenate((np.array((f1,f2)),otherfs)) ))) > 0.1):
-                1
-                news= deepcopy(s)
+            if ((ferror < s['tightnesssettings']['seriessquarefthresh']) and
+                    (h2 > s['bheight'] / s['tightnesssettings']['seriesbratio']) and
+                    (min(np.diff(np.sort(np.concatenate((np.array((f1, f2)), otherfs))))) > 0.1)):
+                news = deepcopy(s)
 # extendseriessquarealltheway.m:171
                 #             if addrowbelow
 #                 nextj = targetnextj+1;
 #                 1;
 #             end
                 #somewhere along the line this becomes an int? this definietly shouldnt be! lets change to float
-                news['column1']['fs']= news['column1']['fs'].astype(np.float32)
-                news['column2']['fs']= news['column2']['fs'].astype(np.float32)
-                news['column3']['fs']= news['column3']['fs'].astype(np.float32)
-                news['column4']['fs']= news['column4']['fs'].astype(np.float32)
+                #changing to float64 to possibly fix #106 round 1
+                news['column1']['fs']= news['column1']['fs'].astype(np.float64)
+                news['column2']['fs']= news['column2']['fs'].astype(np.float64)
+                news['column3']['fs']= news['column3']['fs'].astype(np.float64)
+                news['column4']['fs']= news['column4']['fs'].astype(np.float64)
 
-                news['column1']['hs']= news['column1']['hs'].astype(np.float32)
-                news['column2']['hs']= news['column2']['hs'].astype(np.float32)
-                news['column3']['hs']= news['column3']['hs'].astype(np.float32)
-                news['column4']['hs']= news['column4']['hs'].astype(np.float32)
+                news['column1']['hs']= news['column1']['hs'].astype(np.float64)
+                news['column2']['hs']= news['column2']['hs'].astype(np.float64)
+                news['column3']['hs']= news['column3']['hs'].astype(np.float64)
+                news['column4']['hs']= news['column4']['hs'].astype(np.float64)
                 if 1 == c1:
-                    news['column1']['fs'][r1-1]=f1
+                    news['column1']['fs'][r1]=f1
 # extendseriessquarealltheway.m:178
-                    news['column1']['hs'][r1-1]=h1
+                    news['column1']['hs'][r1]=h1
 # extendseriessquarealltheway.m:179
                 else:
                     if 4 == c1:
-                        news['column4']['fs'][r1-1]=f1
+                        news['column4']['fs'][r1]=f1
 # extendseriessquarealltheway.m:181
-                        news['column4']['hs'][r1-1]=h1
+                        news['column4']['hs'][r1]=h1
 # extendseriessquarealltheway.m:182
                 if 2 == c2:
-                    news['column2']['fs'][r2-1]=f2
+                    news['column2']['fs'][r2]=f2
 # extendseriessquarealltheway.m:187
-                    news['column2']['hs'][r2-1]=h2
+                    news['column2']['hs'][r2]=h2
 # extendseriessquarealltheway.m:188
                 else:
                     if 3 == c2:
-                        news['column3']['fs'][r2-1]=f2
+                        news['column3']['fs'][r2]=f2
 # extendseriessquarealltheway.m:190
-                        news['column3']['hs'][r2-1]=h2
+                        news['column3']['hs'][r2]=h2
 # extendseriessquarealltheway.m:191
-                news['allpredicts'][r2-1,c2-1]=fneeded
+                news['allpredicts'][r2,c2-1]=fneeded
 # extendseriessquarealltheway.m:193
                 try:
                     news['listpredicts']=np.insert(news['listpredicts'],s['nextline']-1,fneeded,axis=0)
                 except:
-                    print('error at 259 in extendseriessquarealltheway>extendseriessquare')
+                    # print('error at 259 in extendseriessquarealltheway>extendseriessquare')
+                    news['listpredicts'].resize((1, s['nextline']), refcheck=False)
+                    news['listpredicts']= news['listpredicts'][0]
+                    news['listpredicts'][s['nextline'] - 1] = fneeded
 # extendseriessquarealltheway.m:194
                 # news['listpredicts'][0][int(s['nextline']-1)]=fneeded
                 news=updateseriessquare(news)

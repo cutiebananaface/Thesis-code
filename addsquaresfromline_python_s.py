@@ -6,7 +6,7 @@ from extractfieldsfromcellarray_python import extractfieldsfromcellarray
 from sortcellarraybyfield_python import sortcellarraybyfield
 # from trimends_python import trimends
 from loadmatlab_workspace import load_mat
-
+from comparefileoutputs import unpackingstruct
 # from removeidentical_python import removeidentical
 
 before = load_mat('input-addsquaresfromlines-s')
@@ -137,12 +137,13 @@ def addsquaresfromline(kit,linetouse):
 
 	f1 = pickfirstf(kit,linetouse)
 	(newsquares,searchreport) = squaresfromline(kit,linetouse)
-	kit['searchedf1s'].append(f1)
+	kit['searchedf1s']= np.append(kit['searchedf1s'], f1)
+
 
 	if searchreport['bogged'] == 0:
 		kit = addtrialsquarestokit(kit,newsquares)
 		kit['totalflatsquares'] += searchreport['numflatsquares']
-		kit['totalCensus'] += searchreport['census']
+		kit['totalCensus'] = kit['totalCensus'] + searchreport['census']
 
 	return kit
 

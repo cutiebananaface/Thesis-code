@@ -149,7 +149,7 @@ def seriessquarefromflatsquare(flatsquare, flipd=0):
 
     s = updateseriessquare(s) 
     #%s['fgrid
-    1
+    # 1
     return s
 
 

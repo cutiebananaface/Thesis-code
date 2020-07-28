@@ -121,17 +121,18 @@ def guessquality(fs,s,upordown):
 def updatepval(s):
 # function s = updatepval(s)
    s['pval'] = 1
-   for n in range(1, (np.size(s['realfs'], axis=None)-2)):
+   for n in range(0, (np.size(s['realfs'], axis=None)-2)):
        # %   n = min(length(s['realfs']),maxdegree+1);
+       # n += 1 # you have to do this because of esclusive vs inclusive in matlab vs python
        numabove = np.size(s['realfs'],axis=None) - n
        numtouse = min(s['maxdegree'],numabove)
        x = np.arange(1,numtouse)
        y = s['realfs'][n+1:n+numtouse]
-       [p] = np.polyfit(x,y,numtouse-1)
+       p = np.polyfit(x,y,numtouse-2)
        predictf = np.polyval(p,0)
        ferr = s['realfs'][n] - predictf
-       s['predicts'][-1+1] = predictf ###!!! not sure what type so i am unsure how to index
-       s['predicterrs'][-1+1] = abs(ferr)
+       s['predicts']= np.append(s['predicts'],predictf) ###!!! not sure what type so i am unsure how to index
+       s['predicterrs'] = np.append(s['predicterrs'],abs(ferr))
        thisp = abs(ferr) / s['frange']
        if thisp < 1:
            s['pval'] = copy.copy(s['pval'] * thisp)
