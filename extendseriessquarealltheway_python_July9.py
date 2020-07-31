@@ -65,7 +65,7 @@ def extendseriessquarealltheway(squarelist,fs,hs):
 # extendseriessquarealltheway.m:19
         # thissquare = squarelist{i};
         for i in np.arange(0, np.size(squarelist)):
-            print(f"this is the index: {i} ~~~~~~~ \n")
+            # print(f"this is the index: {i} ~~~~~~~ \n")
             s = deepcopy(squarelist[i])
 # extendseriessquarealltheway.m:23
             newguys=extendseriessquare(s,fs,hs,1) #local function

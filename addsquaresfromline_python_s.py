@@ -84,9 +84,9 @@ def removeidentical(slist):
 				isindy = 0
 
 		if isindy:
-			sortfs = slist[i]['allfs'].sort()
+			sortfs = np.sort(slist[i]['allfs'])
 			if min(np.diff(sortfs)) > 0.01:
-				newlist.append(slist[i])
+				newlist= np.append(newlist, slist[i])
 
 	return newlist
 
@@ -103,10 +103,10 @@ def identicalseries(s1,s2):
 def addtrialsquarestokit(kit,newsquares):
 	if len(newsquares) > 0:
 		newsquares = sortcellarraybyfield(newsquares,'netpval','ascend')
-		numsquares = min(kit['tightnesssettings']['maxsquaresfromline'],len(newsquares))
+		numsquares = min(kit['tightnesssettings']['maxsquaresfromline'],np.size(newsquares))
 		for i in range(numsquares):
 			thissquare = newsquares[i]
-			kit['candidateScaffolds'].append(thissquare)
+			kit['candidateScaffolds']= np.append(kit['candidateScaffolds'], thissquare)
 
 		kit['candidateScaffolds'] = sortScaffolds(kit['candidateScaffolds'])
 
@@ -126,8 +126,9 @@ def sortScaffolds(candidateScaffolds):
 	for i in range(len(candidateScaffolds)):
 		thisScaffold = candidateScaffolds[i]
 		thisHash = thisScaffold['gridhash']
-		if hashesUsed not in thisHash: # check this
-			newScoffoldList.append(thisScaffold)
+		thisHash= thisHash.item()
+		if thisHash not in hashesUsed: # check this- this still needs to be checked july 27
+			newScoffoldList= np.append(newScoffoldList, thisScaffold)
 			hashesUsed.append(thisHash)
 
 	return newScoffoldList
@@ -138,7 +139,7 @@ def addsquaresfromline(kit,linetouse):
 	f1 = pickfirstf(kit,linetouse)
 	(newsquares,searchreport) = squaresfromline(kit,linetouse)
 	kit['searchedf1s']= np.append(kit['searchedf1s'], f1)
-
+	print("woohoo")
 
 	if searchreport['bogged'] == 0:
 		kit = addtrialsquarestokit(kit,newsquares)

@@ -29,7 +29,11 @@ def sortcellarraybyfield(database,fieldname,upordown="ascend"):
 # sortcellarraybyfield.m:14
     output= []
     for i in range(0,np.size(database, axis=None)):
-        output.append(database[Xi][0][i])
+        try:
+            output.append(database[Xi][0][i])
+        except: #error occurs with function w/ finalsquares in addsquaresfromline- no clue why!
+            Xi= Xi[0][i]
+            output.append(database[Xi])
         # try:
         #     output.insert(i,database[XI][0][i])
         # # except:
